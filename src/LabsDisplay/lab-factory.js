@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { DateTime } from "luxon";
 import Lab from "./lab.js";
 import UnparsableResult from "./unparsable-result.js";
 import {
@@ -57,7 +57,6 @@ function getLabData(labRow) {
 }
 
 function getMetaData(allRows, index) {
-    const dateTimePattern = 'MMM DD, YYYY@HH:mm';
 
     while (index > 0) {
         if (allRows[index].startsWith('Specimen Collection Date',4)) {
@@ -68,9 +67,30 @@ function getMetaData(allRows, index) {
 
     return {
         specimen_unique_id: allRows[index-1].match(/Specimen: [A-Z-a-z ]+.[\s]+([A-Z-a-z-0-9 ]+)/)[1],
-        collection_date: moment(allRows[index].match(/([A-Za-z]{3} [\d]{2}, [\d]{4}(@[\d]{2}:[\d]{2})?)/)[0], dateTimePattern).format('M/D H:mm'),
+        collection_date: parseDate(allRows[index]),
         specimen: allRows[index-1].match(/Specimen: ([A-Z-a-z ]+)/)[1],
         ordering_provider: allRows[index-2].substring(10),
-        released_date: moment(allRows[index-3].match(/([A-Za-z]{3} [\d]{2}, [\d]{4}(@[\d]{2}:[\d]{2})?)/)[0], dateTimePattern).format('M/D H:mm')
+        released_date: parseDate(allRows[index-3]),
     }
+}
+
+function parseDate(dateTimeString) {
+    const dateTimePattern = 'LLL dd, yyyy@HH:mm';
+    const altDatePattern = 'LLL dd, yyyy';
+    const displayFormat = 'L/d H:mm';
+
+    let dt = DateTime.fromFormat(dateTimeString.match(/([A-Za-z]{3} [\d]{2}, [\d]{4}(@[\d]{2}:[\d]{2})?)/)[0], dateTimePattern);
+
+    if (! dt.isValid) {
+        let d = DateTime.fromFormat(dateTimeString.match(/([A-Za-z]{3} [\d]{2}, [\d]{4}(@[\d]{2}:[\d]{2})?)/)[0], altDatePattern);
+
+        if (! d.isValid) {
+            return '';
+        }
+
+        return d.toFormat(displayFormat);
+    }
+
+    return dt.toFormat(displayFormat);
+
 }
