@@ -77,7 +77,6 @@ function getMetaData(allRows, index) {
 function parseDate(dateTimeString) {
     const dateTimePattern = 'LLL dd, yyyy@HH:mm';
     const altDatePattern = 'LLL dd, yyyy';
-    const displayFormat = 'L/d H:mm';
 
     let dt = DateTime.fromFormat(dateTimeString.match(/([A-Za-z]{3} [\d]{2}, [\d]{4}(@[\d]{2}:[\d]{2})?)/)[0], dateTimePattern);
 
@@ -88,9 +87,9 @@ function parseDate(dateTimeString) {
             return '';
         }
 
-        return d.toFormat(displayFormat);
+        return d;
     }
 
-    return dt.toFormat(displayFormat);
+    return dt;
 
 }

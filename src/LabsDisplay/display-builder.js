@@ -4,17 +4,30 @@ function DisplayBuilder(results) {
     this.results = results;
 
     this.getDateTimeHeaders = function () {
-        let headers = {};
+
+        // this puts headers into an object with specID as key
+        // let headers = {};
+        // let resultKeys = Object.keys(this.results);
+        //
+        // for(let i = 0, len = resultKeys.length; i < len; i++) {
+        //     let key = resultKeys[i];
+        //     if (this.results[key]) {
+        //         headers[this.results[key].specimenUniqueId] = this.results[key].collectionDate
+        //     }
+        // }
+
+        let headers = [];
         let resultKeys = Object.keys(this.results);
-
         for(let i = 0, len = resultKeys.length; i < len; i++) {
-            let key = resultKeys[i];
-            if (this.results[key]) {
-                headers[this.results[key].specimenUniqueId] = this.results[key].collectionDate
+                let key = resultKeys[i];
+                if (this.results[key]) {
+                    headers.push(this.results[key].collectionDate);
+                }
             }
-        }
 
-        return headers;
+        return uniq(headers.sort((date1, date2) => date2 - date1));
+
+
     }
 
     this.getLabels = async function () {
@@ -38,6 +51,13 @@ function DisplayBuilder(results) {
         }
         return labelResult.data;
     }
+}
+
+function uniq(a) {
+    let seen = {};
+    return a.filter(function(item) {
+        return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
 }
 
 export default DisplayBuilder;

@@ -1,8 +1,7 @@
 import './style.css'
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
-import {labResults, unparsableRows} from "./LabsDisplay/index.js";
-
+import {labResults, unparsableRows, labels, dateTimeHeaders} from "./LabsDisplay/index.js";
 
 document.querySelector('#app').innerHTML = `
   <div>
@@ -20,29 +19,16 @@ document.querySelector('#app').innerHTML = `
 `
 
 document.querySelector('#counter').innerHTML =
-`<table>
+`<table class="text-sm border-collapse border-spacing-0">
     <thead>
         <tr style="font-weight: bolder">
-            <td>specimenUniqueId</td>
-            <td>name</td>
-            <td>result</td>
-            <td>collectionDate</td>
-            <td>releasedDate</td>
-            <td>flag</td>
-            <td>units</td>
-            <td>referenceRange</td>
-            <td>specimen</td>
-            <td>orderingProvider</td>
-            <td>siteCode</td>
+            <th scope="col" class="text-center border-b border-gray-500 px-2 z-20 sticky bg-gray-200 top-0">
+            ${dateTimeHeaders.map((dt) => dt.toFormat('L/d/yy H:mm')).join('</th><th class="text-center border-b border-gray-500 px-2 z-20 sticky bg-gray-200 top-0">')}
+            </th>
         </tr>
     </thead>
     <tbody>
-        ${labResults.map((row) => (`
-            <tr>
-            ${Object.values(row).map((value) => (`<td>${value}</td>`)).join('')}
-            </tr>
-        `)).join('')}
-    \t\t</tbody>
+        </tbody>
 </table>
 <div>
     ${unparsableRows.map((row) => (row.result))}

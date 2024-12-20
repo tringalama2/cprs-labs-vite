@@ -8,16 +8,15 @@ let labels;
 
 const resultBuilder = new ResultsBuilder(labs);
 
-
 resultBuilder.prepRows();
 resultBuilder.build();
 labResults = resultBuilder.getLabResults();
 unparsableRows = resultBuilder.getUnparsableRows();
 const displayBuilder = new DisplayBuilder(resultBuilder.getLabResults());
-labels = displayBuilder.getLabels();
+labels = await displayBuilder.getLabels();
+const dateTimeHeaders = displayBuilder.getDateTimeHeaders();
 
-console.log(displayBuilder.getDateTimeHeaders());
-console.log(await labels);
-// console.log(labResults);
+// Todo:
+//log unmatched labs
 
-export {labResults, unparsableRows};
+export {labResults, unparsableRows, labels, dateTimeHeaders};
